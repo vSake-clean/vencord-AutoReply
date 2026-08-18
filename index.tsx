@@ -74,6 +74,10 @@ function onMessageCreate(event: any) {
         if (reply.serverId && reply.serverId !== guildId) continue;
         if (reply.channelId && reply.channelId !== channelId) continue;
 
+        const isPv = !guildId;
+        if (reply.onlyPv && !isPv) continue;
+        if (reply.onlyServer && isPv) continue;
+
         const shouldReply = reply.replyType === "reply" ? message : undefined;
         sendReply(channelId, reply.response, shouldReply);
         break;

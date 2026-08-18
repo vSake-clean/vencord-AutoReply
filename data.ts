@@ -16,10 +16,11 @@ export interface AutoReply {
     response: string;
     replyType: "reply" | "text";
     enabled: boolean;
-    // Filters (empty = match all)
     userId: string;
     serverId: string;
     channelId: string;
+    onlyPv: boolean;
+    onlyServer: boolean;
     createdAt: number;
     updatedAt: number;
 }

@@ -24,6 +24,8 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
     const [userId, setUserId] = useState(existingReply?.userId ?? "");
     const [serverId, setServerId] = useState(existingReply?.serverId ?? "");
     const [channelId, setChannelId] = useState(existingReply?.channelId ?? "");
+    const [onlyPv, setOnlyPv] = useState(existingReply?.onlyPv ?? false);
+    const [onlyServer, setOnlyServer] = useState(existingReply?.onlyServer ?? false);
 
     const isEditing = Boolean(existingReply?.id);
 
@@ -39,6 +41,8 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 userId: userId.trim(),
                 serverId: serverId.trim(),
                 channelId: channelId.trim(),
+                onlyPv,
+                onlyServer,
                 enabled: existingReply.enabled,
             });
         } else {
@@ -51,11 +55,13 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 userId: userId.trim(),
                 serverId: serverId.trim(),
                 channelId: channelId.trim(),
+                onlyPv,
+                onlyServer,
             });
         }
         onSave();
         modalProps.onClose();
-    }, [trigger, response, replyType, isRegex, userId, serverId, channelId, isEditing, existingReply, onSave, modalProps]);
+    }, [trigger, response, replyType, isRegex, userId, serverId, channelId, onlyPv, onlyServer, isEditing, existingReply, onSave, modalProps]);
 
     const handleDelete = useCallback(async () => {
         if (isEditing && existingReply?.id) {
@@ -65,7 +71,7 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
         modalProps.onClose();
     }, [isEditing, existingReply, onSave, modalProps]);
 
-    const hasFilter = userId.trim() || serverId.trim() || channelId.trim();
+    const hasFilter = onlyPv || onlyServer || userId.trim() || serverId.trim() || channelId.trim();
 
     return (
         <Modal
@@ -164,6 +170,36 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                     Leave empty to respond to everyone. Fill in to restrict.
                 </div>
 
+                <div className="vc-autoreply-checkbox-row">
+                    <label className="vc-autoreply-checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={onlyPv}
+                            onChange={e => {
+                                setOnlyPv(e.target.checked);
+                                if (e.target.checked) setOnlyServer(false);
+                            }}
+                            className="vc-autoreply-checkbox"
+                        />
+                        <span>Only PV (DM)</span>
+                    </label>
+                </div>
+
+                <div className="vc-autoreply-checkbox-row">
+                    <label className="vc-autoreply-checkbox-label">
+                        <input
+                            type="checkbox"
+                            checked={onlyServer}
+                            onChange={e => {
+                                setOnlyServer(e.target.checked);
+                                if (e.target.checked) setOnlyPv(false);
+                            }}
+                            className="vc-autoreply-checkbox"
+                        />
+                        <span>Only Server</span>
+                    </label>
+                </div>
+
                 <div className="vc-autoreply-filter-group">
                     <Forms.FormTitle tag="h5">User ID</Forms.FormTitle>
                     <TextInput
@@ -194,8 +230,10 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 {hasFilter && (
                     <div className="vc-autoreply-filter-summary">
                         Active filters: {[
+                            onlyPv && "PV Only",
+                            onlyServer && "Server Only",
                             userId.trim() && "User",
-                            serverId.trim() && "Server",
+                            serverId.trim() && "Server ID",
                             channelId.trim() && "Channel",
                         ].filter(Boolean).join(", ")}
                     </div>
