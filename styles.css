@@ -1,0 +1,249 @@
+/* AutoReply Plugin Styles */
+
+/* Modal sections */
+.vc-autoreply-modal-section {
+    margin-bottom: 16px;
+}
+
+.vc-autoreply-modal-section > h5 {
+    margin-bottom: 8px;
+}
+
+/* Checkbox row */
+.vc-autoreply-checkbox-row {
+    margin-top: 8px;
+}
+
+.vc-autoreply-checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-normal);
+}
+
+.vc-autoreply-checkbox {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Radio group */
+.vc-autoreply-radio-group {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.vc-autoreply-radio-label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    font-size: 14px;
+    color: var(--text-normal);
+}
+
+.vc-autoreply-radio {
+    width: 16px;
+    height: 16px;
+    cursor: pointer;
+}
+
+/* Hint text */
+.vc-autoreply-hint {
+    margin-top: 6px;
+    font-size: 12px;
+    color: var(--interactive-muted);
+    font-style: italic;
+}
+
+/* Filter group */
+.vc-autoreply-filter-group {
+    margin-top: 12px;
+}
+
+.vc-autoreply-filter-group > h5 {
+    margin-bottom: 4px;
+    font-size: 12px;
+}
+
+/* Filter summary */
+.vc-autoreply-filter-summary {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: var(--background-tertiary);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--brand-500);
+}
+
+/* List modal */
+.vc-autoreply-list-container {
+    max-height: 500px;
+    overflow-y: auto;
+}
+
+.vc-autoreply-list-empty {
+    text-align: center;
+    padding: 32px 16px;
+    color: var(--interactive-muted);
+}
+
+.vc-autoreply-list-empty p {
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.vc-autoreply-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+/* List item */
+.vc-autoreply-list-item {
+    padding: 12px;
+    background: var(--background-secondary);
+    border-radius: 8px;
+    border-left: 4px solid var(--brand-500);
+    transition: opacity 0.2s ease;
+}
+
+.vc-autoreply-list-item.disabled {
+    opacity: 0.5;
+    border-left-color: var(--interactive-muted);
+}
+
+.vc-autoreply-list-item-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.vc-autoreply-list-item-trigger {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    flex: 1;
+    min-width: 0;
+}
+
+.vc-autoreply-regex-badge {
+    padding: 2px 6px;
+    background: var(--brand-500);
+    color: #fff;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    flex-shrink: 0;
+}
+
+.vc-autoreply-trigger-text {
+    font-size: 14px;
+    font-weight: 600;
+    color: var(--text-normal);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vc-autoreply-list-item-actions {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.vc-autoreply-toggle-btn {
+    padding: 4px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-accent);
+    background: var(--background-tertiary);
+    color: var(--interactive-muted);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.vc-autoreply-toggle-btn.enabled {
+    background: var(--green-360);
+    border-color: var(--green-360);
+    color: #fff;
+}
+
+.vc-autoreply-toggle-btn:hover {
+    background: var(--background-modifier-hover);
+}
+
+.vc-autoreply-edit-btn,
+.vc-autoreply-delete-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    border-radius: 4px;
+    border: none;
+    background: none;
+    color: var(--interactive-normal);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.vc-autoreply-edit-btn:hover {
+    background: var(--background-modifier-hover);
+    color: var(--interactive-hover);
+}
+
+.vc-autoreply-delete-btn:hover {
+    background: var(--status-danger-background);
+    color: var(--status-danger);
+}
+
+.vc-autoreply-list-item-response {
+    margin-top: 8px;
+    font-size: 13px;
+    color: var(--text-muted);
+    display: flex;
+    gap: 6px;
+}
+
+.vc-autoreply-response-label {
+    font-weight: 600;
+    color: var(--text-normal);
+}
+
+.vc-autoreply-response-text {
+    flex: 1;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.vc-autoreply-list-item-filters {
+    margin-top: 6px;
+    font-size: 11px;
+    color: var(--interactive-muted);
+}
+
+/* Info section */
+.vc-autoreply-list-info {
+    margin-top: 16px;
+    padding: 12px;
+    background: var(--background-tertiary);
+    border-radius: 8px;
+}
+
+.vc-autoreply-list-info h5 {
+    margin-bottom: 4px;
+}
+
+.vc-autoreply-list-info p {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin: 0;
+}
