@@ -160,6 +160,40 @@ const ChannelContext: NavContextMenuPatchCallback = (children, props) => {
     );
 };
 
+const GuildContext: NavContextMenuPatchCallback = (children, props) => {
+    const guild = props.guild;
+    if (!guild?.id) return;
+
+    const container = findGroupChildrenByChildId("copy-id", children);
+    if (!container) return;
+
+    const idx = container.findIndex(c => c?.props?.id === "copy-id");
+    if (idx === -1) return;
+
+    container.splice(idx, 0,
+        <Menu.MenuItem
+            key="autoreply-guild"
+            id="autoreply-guild"
+            label="Add Auto-Reply for This Server"
+            action={() => {
+                openAutoReplyModal({
+                    id: "",
+                    trigger: "",
+                    isRegex: false,
+                    response: "",
+                    replyType: "reply",
+                    enabled: true,
+                    userId: "",
+                    serverId: guild.id,
+                    channelId: "",
+                    createdAt: 0,
+                    updatedAt: 0,
+                });
+            }}
+        />
+    );
+};
+
 export default definePlugin({
     name: "AutoReply",
     authors: [{ name: "CipherOS", id: 0n }],
@@ -169,6 +203,7 @@ export default definePlugin({
     contextMenus: {
         "user-context": UserContext,
         "channel-context": ChannelContext,
+        "guild-context": GuildContext,
     },
 
     flux: {
