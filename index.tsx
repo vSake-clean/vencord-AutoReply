@@ -5,7 +5,7 @@
  */
 
 import { findGroupChildrenByChildId, NavContextMenuPatchCallback } from "@api/ContextMenu";
-import { getEnabledReplies, matchReply, initAutoReply, useAutoReply, AutoReply } from "./data";
+import { getEnabledReplies, matchReply, selectResponse, initAutoReply, useAutoReply, AutoReply } from "./data";
 import { openAutoReplyListModal } from "./components/AutoReplyListModal";
 import { openAutoReplyModal } from "./components/AutoReplyModal";
 import { Menu, ChannelStore, UserStore, RestAPI, Constants, SnowflakeUtils } from "@webpack/common";
@@ -79,7 +79,7 @@ function onMessageCreate(event: any) {
         if (reply.onlyServer && isPv) continue;
 
         const shouldReply = reply.replyType === "reply" ? message : undefined;
-        sendReply(channelId, reply.response, shouldReply);
+        sendReply(channelId, selectResponse(reply), shouldReply);
         break;
     }
 }

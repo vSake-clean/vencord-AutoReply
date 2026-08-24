@@ -247,3 +247,107 @@
     color: var(--text-muted);
     margin: 0;
 }
+
+/* Responses section */
+.vc-autoreply-responses-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 8px;
+}
+
+.vc-autoreply-responses-header h5 {
+    margin-bottom: 0;
+}
+
+.vc-autoreply-add-response-btn {
+    padding: 4px 12px;
+    border-radius: 4px;
+    border: 1px solid var(--brand-500);
+    background: transparent;
+    color: var(--brand-500);
+    font-size: 12px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.vc-autoreply-add-response-btn:hover {
+    background: var(--brand-500);
+    color: #fff;
+}
+
+.vc-autoreply-responses-list {
+    margin-top: 8px;
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+}
+
+.vc-autoreply-response-item {
+    padding: 8px;
+    background: var(--background-secondary);
+    border-radius: 6px;
+}
+
+.vc-autoreply-response-row {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.vc-autoreply-response-input {
+    flex: 1;
+}
+
+.vc-autoreply-weight-input {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    flex-shrink: 0;
+}
+
+.vc-autoreply-weight-number {
+    width: 50px;
+    padding: 6px 8px;
+    border-radius: 4px;
+    border: 1px solid var(--background-modifier-accent);
+    background: var(--input-background);
+    color: var(--text-normal);
+    font-size: 13px;
+    text-align: center;
+}
+
+.vc-autoreply-weight-label {
+    font-size: 12px;
+    color: var(--interactive-muted);
+    min-width: 32px;
+}
+
+.vc-autoreply-remove-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    border: none;
+    background: var(--status-danger-background);
+    color: var(--status-danger);
+    font-size: 11px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.15s ease;
+    flex-shrink: 0;
+}
+
+.vc-autoreply-remove-btn:hover {
+    background: var(--status-danger);
+    color: #fff;
+}
+
+.vc-autoreply-responses-summary {
+    margin-top: 8px;
+    padding: 6px 10px;
+    background: var(--background-tertiary);
+    border-radius: 6px;
+    font-size: 12px;
+    color: var(--interactive-muted);
+}

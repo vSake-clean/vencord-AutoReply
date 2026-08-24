@@ -9,11 +9,17 @@ import { useForceUpdater } from "@utils/react";
 
 export const DS_KEY = "AutoReply_data";
 
+export interface ResponseOption {
+    text: string;
+    weight: number;
+}
+
 export interface AutoReply {
     id: string;
     trigger: string;
     isRegex: boolean;
     response: string;
+    responses: ResponseOption[];
     replyType: "reply" | "text";
     enabled: boolean;
     userId: string;
@@ -114,4 +120,19 @@ export function matchReply(reply: AutoReply, messageContent: string): boolean {
     }
 
     return messageContent.toLowerCase().includes(reply.trigger.toLowerCase());
+}
+
+export function selectResponse(reply: AutoReply): string {
+    if (reply.responses && reply.responses.length > 0) {
+        const totalWeight = reply.responses.reduce((sum, r) => sum + r.weight, 0);
+        if (totalWeight <= 0) return reply.response;
+
+        let random = Math.random() * totalWeight;
+        for (const option of reply.responses) {
+            random -= option.weight;
+            if (random <= 0) return option.text;
+        }
+        return reply.responses[reply.responses.length - 1].text;
+    }
+    return reply.response;
 }

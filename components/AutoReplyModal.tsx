@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { addReply, updateReply, deleteReply, AutoReply } from "../data";
+import { addReply, updateReply, deleteReply, AutoReply, ResponseOption } from "../data";
 import { Forms, Modal, openModal, TextInput, useState, useRef, useCallback } from "@webpack/common";
 import ErrorBoundary from "@components/ErrorBoundary";
 
@@ -19,6 +19,7 @@ interface ModalProps {
 function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) {
     const [trigger, setTrigger] = useState(existingReply?.trigger ?? "");
     const [response, setResponse] = useState(existingReply?.response ?? "");
+    const [responses, setResponses] = useState<ResponseOption[]>(existingReply?.responses ?? []);
     const [replyType, setReplyType] = useState<"reply" | "text">(existingReply?.replyType ?? "reply");
     const [isRegex, setIsRegex] = useState(existingReply?.isRegex ?? false);
     const [userId, setUserId] = useState(existingReply?.userId ?? "");
@@ -30,38 +31,38 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
     const isEditing = Boolean(existingReply?.id);
 
     const handleSave = useCallback(async () => {
-        if (!trigger.trim() || !response.trim()) return;
+        if (!trigger.trim()) return;
+
+        const hasResponse = response.trim() || responses.some(r => r.text.trim());
+        if (!hasResponse) return;
+
+        const replyData = {
+            trigger: trigger.trim(),
+            response: response.trim(),
+            responses,
+            replyType,
+            isRegex,
+            userId: userId.trim(),
+            serverId: serverId.trim(),
+            channelId: channelId.trim(),
+            onlyPv,
+            onlyServer,
+        };
 
         if (isEditing && existingReply?.id) {
             await updateReply(existingReply.id, {
-                trigger: trigger.trim(),
-                response: response.trim(),
-                replyType,
-                isRegex,
-                userId: userId.trim(),
-                serverId: serverId.trim(),
-                channelId: channelId.trim(),
-                onlyPv,
-                onlyServer,
+                ...replyData,
                 enabled: existingReply.enabled,
             });
         } else {
             await addReply({
-                trigger: trigger.trim(),
-                response: response.trim(),
-                replyType,
-                isRegex,
+                ...replyData,
                 enabled: true,
-                userId: userId.trim(),
-                serverId: serverId.trim(),
-                channelId: channelId.trim(),
-                onlyPv,
-                onlyServer,
             });
         }
         onSave();
         modalProps.onClose();
-    }, [trigger, response, replyType, isRegex, userId, serverId, channelId, onlyPv, onlyServer, isEditing, existingReply, onSave, modalProps]);
+    }, [trigger, response, responses, replyType, isRegex, userId, serverId, channelId, onlyPv, onlyServer, isEditing, existingReply, onSave, modalProps]);
 
     const handleDelete = useCallback(async () => {
         if (isEditing && existingReply?.id) {
@@ -71,7 +72,20 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
         modalProps.onClose();
     }, [isEditing, existingReply, onSave, modalProps]);
 
+    const addResponse = useCallback(() => {
+        setResponses(prev => [...prev, { text: "", weight: 1 }]);
+    }, []);
+
+    const updateResponse = useCallback((index: number, field: "text" | "weight", value: string | number) => {
+        setResponses(prev => prev.map((r, i) => i === index ? { ...r, [field]: value } : r));
+    }, []);
+
+    const removeResponse = useCallback((index: number) => {
+        setResponses(prev => prev.filter((_, i) => i !== index));
+    }, []);
+
     const hasFilter = onlyPv || onlyServer || userId.trim() || serverId.trim() || channelId.trim();
+    const totalWeight = responses.reduce((sum, r) => sum + r.weight, 0);
 
     return (
         <Modal
@@ -93,11 +107,10 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                     text: "Save",
                     variant: "primary",
                     onClick: handleSave,
-                    disabled: !trigger.trim() || !response.trim(),
+                    disabled: !trigger.trim() || (!response.trim() && !responses.some(r => r.text.trim())),
                 },
             ]}
         >
-            {/* Trigger Section */}
             <div className="vc-autoreply-modal-section">
                 <Forms.FormTitle tag="h5">Trigger</Forms.FormTitle>
                 <TextInput
@@ -124,7 +137,6 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 </div>
             </div>
 
-            {/* Response Section */}
             <div className="vc-autoreply-modal-section">
                 <Forms.FormTitle tag="h5">Response</Forms.FormTitle>
                 <TextInput
@@ -134,7 +146,63 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 />
             </div>
 
-            {/* Reply Type Section */}
+            <div className="vc-autoreply-modal-section">
+                <div className="vc-autoreply-responses-header">
+                    <Forms.FormTitle tag="h5">Responses (optional)</Forms.FormTitle>
+                    <button
+                        className="vc-autoreply-add-response-btn"
+                        onClick={addResponse}
+                    >
+                        + Add
+                    </button>
+                </div>
+                <div className="vc-autoreply-hint">
+                    Add multiple responses with weights. Random selection based on weight.
+                </div>
+
+                {responses.length > 0 && (
+                    <div className="vc-autoreply-responses-list">
+                        {responses.map((resp, idx) => (
+                            <div key={idx} className="vc-autoreply-response-item">
+                                <div className="vc-autoreply-response-row">
+                                    <TextInput
+                                        value={resp.text}
+                                        onChange={val => updateResponse(idx, "text", val)}
+                                        placeholder="Response text..."
+                                        className="vc-autoreply-response-input"
+                                    />
+                                    <div className="vc-autoreply-weight-input">
+                                        <input
+                                            type="number"
+                                            value={resp.weight}
+                                            onChange={e => updateResponse(idx, "weight", Math.max(1, parseInt(e.target.value) || 1))}
+                                            min="1"
+                                            className="vc-autoreply-weight-number"
+                                        />
+                                        <span className="vc-autoreply-weight-label">
+                                            {totalWeight > 0 ? Math.round((resp.weight / totalWeight) * 100) : 0}%
+                                        </span>
+                                    </div>
+                                    <button
+                                        className="vc-autoreply-remove-btn"
+                                        onClick={() => removeResponse(idx)}
+                                        title="Remove"
+                                    >
+                                        X
+                                    </button>
+                                </div>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                {responses.length > 0 && (
+                    <div className="vc-autoreply-responses-summary">
+                        Total weight: {totalWeight} | {responses.length} response(s)
+                    </div>
+                )}
+            </div>
+
             <div className="vc-autoreply-modal-section">
                 <Forms.FormTitle tag="h5">Reply Type</Forms.FormTitle>
                 <div className="vc-autoreply-radio-group">
@@ -163,7 +231,6 @@ function AutoReplyModalInner({ modalProps, existingReply, onSave }: ModalProps) 
                 </div>
             </div>
 
-            {/* Filters Section */}
             <div className="vc-autoreply-modal-section">
                 <Forms.FormTitle tag="h5">Filters (optional)</Forms.FormTitle>
                 <div className="vc-autoreply-hint">
