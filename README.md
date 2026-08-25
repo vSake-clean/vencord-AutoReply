@@ -26,7 +26,7 @@ A [Vencord](https://github.com/Vencord/Vencord) userplugin that automatically re
 2. Clone this repository into that directory:
    ```bash
    cd ~/.config/Vencord/userplugins/
-   git clone https://github.com/vSake-clean/vencord-AutoReply.git AutoReply
+   git clone https://github.com/vSake/StatusCycler.git AutoReply
    ```
 
 3. Restart Discord (or Vesktop).
@@ -40,7 +40,7 @@ If you use Vesktop with a custom Vencord directory:
 1. Clone into your Vencord source's `src/userplugins/` folder:
    ```bash
    cd ~/vencord-custom/vencord-src/src/userplugins/
-   git clone https://github.com/vSake-clean/vencord-AutoReply.git AutoReply
+   git clone https://github.com/vSake/StatusCycler.git AutoReply
    ```
 
 2. Rebuild Vencord:
